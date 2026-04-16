@@ -10,7 +10,7 @@ public class RMIServer {
         try {
             LocateRegistry.createRegistry(1099);
             TempService servicio = new TempServiceImpl();
-            Naming.rebind("rmi://localhost/TempService", servicio);
+            Naming.rebind("rmi://10.146.251.76/TempService", servicio);
 
             System.out.println("✅ Servidor Central (CEDI) listo y esperando datos de los camiones...");
         } catch (Exception e) {

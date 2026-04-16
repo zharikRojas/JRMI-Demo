@@ -21,7 +21,7 @@ public class RMIClient {
                 LecturaTemp nuevaLectura = new LecturaTemp(camionId, tempActual, System.currentTimeMillis());
 
                 // 2. Conectar al servidor
-                TempService servicio = (TempService) Naming.lookup("rmi://localhost/TempService");
+                TempService servicio = (TempService) Naming.lookup("rmi://10.146.251.76/TempService");
 
                 // 3. ¿Teníamos datos acumulados por falta de internet? Si es así, los enviamos de golpe.
                 if (!datosOffline.isEmpty()) {

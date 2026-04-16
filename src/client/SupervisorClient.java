@@ -15,7 +15,7 @@ public class SupervisorClient {
         while (true) {
             try {
                 // Se conecta al mismo servidor que los camiones
-                TempService servicio = (TempService) Naming.lookup("rmi://localhost/TempService");
+                TempService servicio = (TempService) Naming.lookup("rmi://10.146.251.76/TempService");
                 List<LecturaTemp> estadoGeneral = servicio.obtenerEstadoActual();
 
                 System.out.println("\n--- ESTADO DE LA RED (" + sdf.format(new Date()) + ") ---");
