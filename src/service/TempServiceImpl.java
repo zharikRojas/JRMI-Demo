@@ -4,12 +4,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TempServiceImpl extends UnicastRemoteObject implements TempService {
 
     // Lista sincronizada para evitar errores si 2 camiones envían datos al mismo tiempo
-    private List<LecturaTemp> baseDeDatos = Collections.synchronizedList(new ArrayList<>());
+    private final List<LecturaTemp> baseDeDatos = Collections.synchronizedList(new ArrayList<>());
 
     public TempServiceImpl() throws RemoteException {
         super();
@@ -32,5 +34,31 @@ public class TempServiceImpl extends UnicastRemoteObject implements TempService 
     public List<LecturaTemp> obtenerEstadoActual() throws RemoteException {
         // Retornamos una copia para que la tablet la lea
         return new ArrayList<>(baseDeDatos);
+    }
+
+    @Override
+    public List<LecturaTemp> obtenerEstadoPorCamion(String camionId) throws RemoteException {
+        List<LecturaTemp> filtradas = new ArrayList<>();
+        synchronized (baseDeDatos) {
+            for (LecturaTemp lectura : baseDeDatos) {
+                if (lectura.idSensor != null && lectura.idSensor.equalsIgnoreCase(camionId)) {
+                    filtradas.add(lectura);
+                }
+            }
+        }
+        return filtradas;
+    }
+
+    @Override
+    public List<String> obtenerCamionesRegistrados() throws RemoteException {
+        Set<String> ids = new LinkedHashSet<>();
+        synchronized (baseDeDatos) {
+            for (LecturaTemp lectura : baseDeDatos) {
+                if (lectura.idSensor != null && !lectura.idSensor.isBlank()) {
+                    ids.add(lectura.idSensor);
+                }
+            }
+        }
+        return new ArrayList<>(ids);
     }
 }

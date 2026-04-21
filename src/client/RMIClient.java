@@ -10,9 +10,11 @@ public class RMIClient {
     public static void main(String[] args) {
         // Esta lista simula la memoria interna del sensor cuando no hay internet
         List<LecturaTemp> datosOffline = new ArrayList<>();
-        String camionId = "Tractomula-001"; 
+        String camionId = args.length > 0 ? args[0] : "Tractomula-001";
+        String servidorUrl = args.length > 1 ? args[1] : "rmi://192.168.1.53/TempService";
 
         System.out.println("🚚 Sensor del camión " + camionId + " iniciado.");
+        System.out.println("🌐 Enviando datos a: " + servidorUrl);
 
         while (true) {
             try {
@@ -21,7 +23,7 @@ public class RMIClient {
                 LecturaTemp nuevaLectura = new LecturaTemp(camionId, tempActual, System.currentTimeMillis());
 
                 // 2. Conectar al servidor
-                TempService servicio = (TempService) Naming.lookup("rmi://10.146.251.76/TempService");
+                TempService servicio = (TempService) Naming.lookup(servidorUrl);
 
                 // 3. ¿Teníamos datos acumulados por falta de internet? Si es así, los enviamos de golpe.
                 if (!datosOffline.isEmpty()) {
